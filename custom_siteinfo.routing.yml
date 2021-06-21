@@ -1,0 +1,12 @@
+custom_siteinfo.node_json:
+  path: 'page_json/{site_key}/{node}'
+  defaults:
+    _title: 'Node Json Data'
+    _controller: '\Drupal\custom_siteinfo\Controller\CustomSiteInfoController::getNodeData'
+  requirements:
+    _siteinfo_access_check: 'TRUE'
+  options:
+    parameters:
+      node:
+        type: entity:node
+

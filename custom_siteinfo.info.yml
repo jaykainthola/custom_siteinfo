@@ -1,0 +1,5 @@
+name: Custom Site information
+description: Add a custom site key in site information.
+core_version_requirement: ^8.8 || ^9
+type: module
+version: 8.x-1

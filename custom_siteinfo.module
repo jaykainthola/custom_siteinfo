@@ -1,0 +1,48 @@
+<?php
+
+/**
+ *
+ * @file
+ * Add a custom site key in site information
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function custom_siteinfo_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  if ($form_id == 'system_site_information_settings') {
+
+    $site_api_key =  Drupal::config('system.site')->get('siteapikey');
+
+     $form['site_information']['site_key'] = [
+       '#type' => 'textfield',
+       '#title' => 'Site key',
+       '#default_value' => (!empty($site_api_key) ? $site_api_key : 'No API Key yet')
+     ];
+
+    $form['actions']['submit']['#value'] = (!empty($site_api_key) ? 'Update Configuration' : 'Save configuration');
+
+
+     $form['#submit'][] = 'custom_siteinfo_form_submit';
+  }
+}
+
+/**
+ * Callback: Submit
+ * @param $form
+ * @param \Drupal\Core\Form\FormStateInterface $formState
+ */
+function custom_siteinfo_form_submit($form, FormStateInterface $formState) {
+
+  //Add sitekey in configuration when it has some value.
+  if ($formState->getValue('site_key') != 'No API Key yet') {
+    $site_sttings = Drupal::configFactory()->getEditable('system.site');
+    $site_sttings->set('siteapikey', $formState->getValue('site_key'));
+    $site_sttings->save();
+
+    Drupal::messenger()->addMessage('Site Key is saved with value ' .  $formState->getValue('site_key'));
+  }
+}
